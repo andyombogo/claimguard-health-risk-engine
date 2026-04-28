@@ -1,0 +1,11 @@
+# Streamlit Community Cloud runtime dependencies.
+#
+# Community Cloud checks the entrypoint directory before the repository root.
+# Since the deployed entrypoint is app/streamlit_app.py, this slim file avoids
+# installing API, testing, and optional ML packages during dashboard deployment.
+streamlit>=1.44,<2.0
+pandas>=2.2,<3.0
+plotly>=5.20,<6.0
+pydantic>=2.7,<3.0
+pyyaml>=6.0,<7.0
+python-dotenv>=1.0,<2.0

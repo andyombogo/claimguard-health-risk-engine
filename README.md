@@ -64,6 +64,8 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
+For Streamlit Community Cloud, the deployed dashboard uses the slimmer dependency file at `app/requirements.txt` because the entrypoint is `app/streamlit_app.py`. This keeps deployment focused on the dashboard instead of installing optional API, test, and experimentation packages.
+
 Generate the synthetic dataset:
 
 ```powershell
