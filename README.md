@@ -25,7 +25,11 @@ Medical claims officers often work under time pressure, high claim volumes, and 
 
 ## Architecture Snapshot
 
-GitHub renders Mermaid diagrams natively, so the flow below should display directly in the repository view.
+This is the flow we used to shape the MVP, from synthetic claims input all the way to reviewer-facing triage and human decision support.
+
+![ClaimGuard Architecture Flow](./outputs/screenshots/claimguard-architecture-flow.gif)
+
+The Mermaid version is included below as a clean reference view in the repository.
 
 ```mermaid
 flowchart LR
