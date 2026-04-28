@@ -1,0 +1,77 @@
+metadata:
+  name: ClaimGuard Health Risk Engine
+  version: 0.3.0
+  description: Transparent rule definitions for synthetic health claims risk scoring and explainability.
+
+scoring:
+  min_score: 0
+  max_score: 100
+
+risk_bands:
+  low_risk:
+    min_score: 0
+    max_score: 24
+    description: Fast-track queue with limited review concerns.
+  medium_risk:
+    min_score: 25
+    max_score: 49
+    description: Standard review queue with attention to flagged items.
+  high_risk:
+    min_score: 50
+    max_score: 74
+    description: Maker-checker review is recommended before routine approval.
+  critical_risk:
+    min_score: 75
+    max_score: 100
+    description: Detailed investigation is recommended before approval.
+
+rules:
+  exact_duplicate_claim:
+    enabled: true
+    points: 30
+    severity: high
+    short_description: Claim exactly matches another submission across member, provider, coding, amount, and date.
+    parameters:
+      date_window_days: 0
+
+  near_duplicate_claim:
+    enabled: true
+    points: 20
+    severity: medium
+    short_description: Claim closely resembles another submission for the same member and provider within the review window.
+    parameters:
+      amount_tolerance: 0.05
+      date_window_days: 14
+
+  abnormal_billing:
+    enabled: true
+    points: 25
+    severity: high
+    short_description: Claim amount is materially above the median for similar diagnosis and procedure patterns.
+    parameters:
+      multiplier_threshold: 2.5
+
+  diagnosis_treatment_mismatch:
+    enabled: true
+    points: 20
+    severity: medium
+    short_description: Procedure is not expected for the recorded diagnosis and should be clinically reviewed.
+    parameters: {}
+
+  provider_pattern_risk:
+    enabled: true
+    points: 15
+    severity: medium
+    short_description: Provider claim frequency, average amount, or duplicate-linked activity is elevated.
+    parameters: {}
+
+  missing_documents:
+    enabled: true
+    points: 5
+    severity: low
+    short_description: One or more required supporting documents are missing and should be followed up.
+    parameters:
+      required_documents:
+        - invoice
+        - discharge summary
+        - lab report

@@ -1,0 +1,17 @@
+name: claimguard-health-risk-engine
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pandas
+  - numpy
+  - streamlit
+  - plotly
+  - pydantic
+  - pyyaml
+  - rapidfuzz
+  - scikit-learn
+  - pytest
+  - fastapi
+  - uvicorn
+  - python-dotenv

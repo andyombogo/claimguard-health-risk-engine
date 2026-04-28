@@ -1,0 +1,9 @@
+claim_id,member_id,provider_id,claim_type,date_of_service,admission_date,discharge_date,diagnosis_code,treatment_code,claimed_amount,approved_amount,document_status,duplicate_group_hint,provider_claims_90d,member_claims_180d,escalation_trigger,notes
+CLM-1001,MEM-301,PRV-044,Outpatient,2026-03-12,,,J11,LAB-FLU,14500,0,complete,,18,2,no,Seasonal flu consultation with lab request
+CLM-1002,MEM-301,PRV-044,Outpatient,2026-03-12,,,J11,LAB-FLU,14500,0,complete,dup-01,18,2,no,Possible repeat submission on the same day
+CLM-1003,MEM-118,PRV-009,Inpatient,2026-03-18,2026-03-18,2026-03-19,S93,ORTHO-KNEE,385000,0,missing_discharge_summary,,6,1,yes,Short admission with unusually high billed amount
+CLM-1004,MEM-522,PRV-201,Pharmacy,2026-03-20,,,E11,ONCO-INFUSION,98000,0,partial,,24,7,no,Diagnosis and treatment pairing needs clinical verification
+CLM-1005,MEM-874,PRV-077,Outpatient,2026-03-22,,,K21,CONSULT-GEN,6200,0,complete,,52,9,no,High-frequency provider and repeat member usage pattern
+CLM-1006,MEM-442,PRV-114,Dental,2026-03-25,,,K02,DENT-RESTORE,11800,0,complete,,3,1,no,Routine dental restoration scenario
+CLM-1007,MEM-118,PRV-009,Inpatient,2026-03-18,2026-03-18,2026-03-19,S93,ORTHO-KNEE,382500,0,missing_discharge_summary,dup-02,6,1,yes,Near-duplicate inpatient billing with amount rounding variation
+CLM-1008,MEM-990,PRV-310,Outpatient,2026-03-28,,,N39,CT-CHEST,132000,0,partial,,2,1,yes,Potential mismatch between diagnosis and billed treatment

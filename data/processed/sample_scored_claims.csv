@@ -1,0 +1,9 @@
+claim_id,risk_score,risk_band,triggered_rules,review_action,requires_escalation,explanation_summary
+CLM-1001,30,Medium,possible_duplicate_same_day,Queue for analyst review,False,Same-day duplicate characteristics suggest this claim should be verified before routine progression.
+CLM-1002,30,Medium,possible_duplicate_same_day,Queue for analyst review,False,Same-day duplicate characteristics suggest this claim should be verified before routine progression.
+CLM-1003,100,High,near_duplicate_amount_pattern|abnormal_billing|document_completeness|manual_escalation,Priority maker-checker review,True,High-risk review is recommended because multiple rules were triggered, led by near_duplicate_amount_pattern and abnormal_billing.
+CLM-1004,52,Medium,diagnosis_treatment_check|document_completeness|member_repeat_usage,Queue for analyst review,False,Medium-risk review is recommended because multiple rules were triggered, led by diagnosis_treatment_check and document_completeness.
+CLM-1005,22,Low,provider_history_volume|member_repeat_usage,Standard review,False,Low-risk review is recommended because multiple rules were triggered, led by provider_history_volume and member_repeat_usage.
+CLM-1006,0,Low,none,Standard review,False,Low risk. No configured review flags were triggered for this synthetic claim.
+CLM-1007,100,High,near_duplicate_amount_pattern|abnormal_billing|document_completeness|manual_escalation,Priority maker-checker review,True,High-risk review is recommended because multiple rules were triggered, led by near_duplicate_amount_pattern and abnormal_billing.
+CLM-1008,62,High,diagnosis_treatment_check|document_completeness|manual_escalation,Priority maker-checker review,True,High-risk review is recommended because multiple rules were triggered, led by diagnosis_treatment_check and document_completeness.

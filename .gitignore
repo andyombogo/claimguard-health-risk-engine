@@ -1,0 +1,53 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+.conda/
+
+# Environment files
+.env
+.env.*
+
+# Test and coverage
+.pytest_cache/
+pytest-cache-files-*/
+pytest-cache-files-*
+.coverage
+htmlcov/
+
+# Tooling caches
+.mypy_cache/
+.ruff_cache/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# Editors and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Local git recovery artifacts
+.git_incomplete_backup_*/
+
+# Local outputs and generated artifacts
+outputs/screenshots/*.png
+outputs/screenshots/*.jpg
+data/processed/*.parquet
+data/processed/*.feather
+data/processed/*.pkl
+data/processed/*.xlsx
