@@ -20,10 +20,11 @@
 - A high score means a claim should be reviewed more closely, not that wrongdoing is confirmed.
 
 ## Next Steps
-- Add richer member and provider history views backed by persistent storage.
-- Expand near-duplicate detection with fuzzy matching and configurable thresholds.
-- Capture reviewer feedback to refine thresholds and reduce noisy flags.
-- Add exportable review packs and stronger audit workflow persistence.
+- Persist reviewer actions so audit events survive dashboard refreshes.
+- Show clearer related-claim context for same member, provider, diagnosis, and close claim dates.
+- Move more rule thresholds into YAML and add a rule-impact calibration summary.
+- Add API request/response examples plus endpoint tests for `/health` and `/score-claim`.
+- Capture dashboard screenshots and add a short demo walkthrough for fellowship review.
 
 ## Example Commands
 - Generate synthetic data: `py -B src\data_processing\generate_synthetic_claims.py`

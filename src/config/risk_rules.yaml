@@ -63,7 +63,11 @@ rules:
     points: 15
     severity: medium
     short_description: Provider claim frequency, average amount, or duplicate-linked activity is elevated.
-    parameters: {}
+    parameters:
+      total_claims_quantile: 0.90
+      average_amount_quantile: 0.90
+      high_value_rate_quantile: 0.85
+      duplicate_rate_quantile: 0.85
 
   missing_documents:
     enabled: true

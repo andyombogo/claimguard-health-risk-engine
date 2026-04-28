@@ -19,6 +19,7 @@ from app.dashboard_utils import (
     get_dashboard_data,
     initialize_dashboard_state,
     plotly_white_template,
+    reset_demo_audit_log,
 )
 from src.workflow.maker_checker import assign_maker_checker
 
@@ -30,8 +31,26 @@ audit_log_df = get_audit_log_df()
 
 st.title("Audit Log")
 st.caption(
-    "Review recent workflow actions and a mock maker-checker summary for the current dashboard session."
+    "Review persisted workflow actions and a maker-checker summary for the current demo portfolio."
 )
+
+if st.session_state.get("audit_persistence_warning"):
+    st.warning(st.session_state["audit_persistence_warning"])
+
+control_one, control_two = st.columns((1, 3))
+with control_one:
+    if st.button("Reset Demo Audit Log", use_container_width=True):
+        reset_demo_audit_log(claims_df)
+        st.success("Demo audit log reset to the synthetic first-run examples.")
+        st.rerun()
+with control_two:
+    st.download_button(
+        "Download Audit Log CSV",
+        data=audit_log_df.to_csv(index=False).encode("utf-8"),
+        file_name="claimguard_review_audit_log.csv",
+        mime="text/csv",
+        use_container_width=True,
+    )
 
 metric_one, metric_two, metric_three, metric_four = st.columns(4)
 metric_one.metric("Logged Actions", f"{len(audit_log_df):,}")

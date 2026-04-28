@@ -107,9 +107,13 @@ else:
     st.info("No active review flags were found for this claim.")
 
 st.subheader("Similar Or Related Claims")
+st.caption(
+    "Related claims are shown as review context only. They help a reviewer compare nearby activity, "
+    "but they do not establish wrongdoing or a duplicate on their own."
+)
 if related_claims_df.empty:
     st.write(
-        "No closely related claims were found using the current same-member and same-provider diagnosis checks."
+        "No closely related claims were found using the current member, provider, diagnosis, date, and amount checks."
     )
 else:
     st.dataframe(
@@ -119,6 +123,8 @@ else:
         column_config={
             "claim_amount": st.column_config.NumberColumn("Claim Amount", format="%.2f"),
             "total_risk_score": st.column_config.NumberColumn("Risk Score", format="%d"),
+            "days_from_selected_claim": st.column_config.NumberColumn("Days From Selected", format="%d"),
+            "amount_difference_pct": st.column_config.NumberColumn("Amount Difference", format="%.2f%%"),
         },
     )
 

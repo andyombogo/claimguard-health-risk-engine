@@ -82,10 +82,18 @@ Run the optional API:
 uvicorn api.main:app --reload
 ```
 
+Example request and response payloads are available in [`api/examples/`](./api/examples/).
+
 Run the tests:
 
 ```powershell
 pytest
+```
+
+Generate a rule-impact calibration summary:
+
+```powershell
+python -m src.rules.rule_impact_summary
 ```
 
 ## Repository Structure
@@ -112,6 +120,7 @@ claimguard-health-risk-engine/
 - [Risk Scoring Logic](./docs/risk_scoring_logic.md)
 - [Prototype Screens](./docs/prototype_screens.md)
 - [Ethical Considerations](./docs/ethical_considerations.md)
+- [Streamlit Deployment Guide](./docs/streamlit_deployment.md)
 - [Roadmap](./ROADMAP.md)
 
 ## Responsible Use
@@ -126,9 +135,9 @@ ClaimGuard is a decision-support tool, not an automated accusation system.
 
 ## Roadmap
 
-The current MVP focuses on explainable rules, claim-level scoring, reviewer-facing triage, and lightweight demo interfaces. Future phases extend the quality of signals, workflow maturity, and operational readiness concepts while keeping human oversight central.
+The current MVP already covers synthetic data, explainable rules, risk scoring, dashboard views, a demo API, tests, and documentation. The next build focuses on the gaps that matter most for a claims officer: persisted review actions, clearer related-claim context, configurable rule calibration, API examples, and polished demo screenshots.
 
-See [ROADMAP.md](./ROADMAP.md) for the phased flow diagram and development path.
+See [ROADMAP.md](./ROADMAP.md) for the detailed next-step plan, acceptance criteria, and longer-term phases.
 
 ## Authors
 

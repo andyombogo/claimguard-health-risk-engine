@@ -50,17 +50,23 @@ def compute_provider_risk_summary(df: pd.DataFrame) -> pd.DataFrame:
     return summary_df
 
 
-def flag_provider_pattern_risk(df: pd.DataFrame) -> pd.DataFrame:
+def flag_provider_pattern_risk(
+    df: pd.DataFrame,
+    total_claims_quantile: float = 0.90,
+    average_amount_quantile: float = 0.90,
+    high_value_rate_quantile: float = 0.85,
+    duplicate_rate_quantile: float = 0.85,
+) -> pd.DataFrame:
     """Flag claims tied to providers with unusually elevated utilization patterns."""
 
     normalized_df = normalize_claims_dataframe(df, _REQUIRED_COLUMNS, RULE_NAME)
     output_df = initialize_rule_output(normalized_df, RULE_NAME)
     provider_summary_df = compute_provider_risk_summary(normalized_df)
 
-    total_claims_threshold = provider_summary_df["total_claims"].quantile(0.90)
-    average_amount_threshold = provider_summary_df["average_claim_amount"].quantile(0.90)
-    high_value_rate_threshold = provider_summary_df["high_value_claim_rate"].quantile(0.85)
-    duplicate_rate_threshold = provider_summary_df["duplicate_flag_rate"].quantile(0.85)
+    total_claims_threshold = provider_summary_df["total_claims"].quantile(total_claims_quantile)
+    average_amount_threshold = provider_summary_df["average_claim_amount"].quantile(average_amount_quantile)
+    high_value_rate_threshold = provider_summary_df["high_value_claim_rate"].quantile(high_value_rate_quantile)
+    duplicate_rate_threshold = provider_summary_df["duplicate_flag_rate"].quantile(duplicate_rate_quantile)
 
     flagged_provider_ids: dict[str, tuple[str, str]] = {}
     for _, provider_row in provider_summary_df.iterrows():

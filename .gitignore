@@ -45,6 +45,9 @@ Thumbs.db
 .git_incomplete_backup_*/
 
 # Local outputs and generated artifacts
+outputs/review_audit_log.csv
+outputs/rule_impact_summary.csv
+outputs/rule_impact_summary.md
 outputs/screenshots/*.png
 outputs/screenshots/*.jpg
 data/processed/*.parquet

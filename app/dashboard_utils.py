@@ -12,10 +12,20 @@ from src.rules.run_all_rules import run_all_rules
 from src.scoring.explainability import build_claim_risk_profile
 from src.scoring.risk_band import risk_band_sort_value
 from src.scoring.risk_score import score_claims
+from src.workflow.audit_log import (
+    append_audit_record,
+    audit_records_to_frame,
+    build_seed_audit_records,
+    derive_status_overrides,
+    load_audit_records,
+    save_audit_records,
+)
+from src.workflow.related_claims import find_related_claims as find_related_claim_context
 from src.workflow.triage_queue import build_triage_queue
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SYNTHETIC_CLAIMS_PATH = REPO_ROOT / "data" / "synthetic" / "synthetic_health_claims.csv"
+AUDIT_LOG_PATH = REPO_ROOT / "outputs" / "review_audit_log.csv"
 
 RISK_BAND_COLORS = {
     "Low Risk": "#6BA292",
@@ -116,40 +126,21 @@ def get_dashboard_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.D
         raise
 
 
-def _seed_audit_log(claims_df: pd.DataFrame) -> list[dict[str, str]]:
-    """Create a small mock audit history for the demo."""
+def _set_audit_persistence_warning() -> None:
+    """Remember that file-backed audit persistence is unavailable."""
 
-    sample_claims = claims_df.head(3)["claim_id"].astype(str).tolist()
-    seed_time = pd.Timestamp("2026-04-28 09:00:00")
-    return [
-        {
-            "timestamp": (seed_time + pd.Timedelta(minutes=5)).strftime("%Y-%m-%d %H:%M"),
-            "claim_id": sample_claims[0],
-            "action": "Initial triage completed",
-            "reviewer_role": "Claims Officer",
-            "previous_status": "Submitted",
-            "new_status": "Under Review",
-            "note": "Claim reviewed against current rule set and queued for attention.",
-        },
-        {
-            "timestamp": (seed_time + pd.Timedelta(minutes=22)).strftime("%Y-%m-%d %H:%M"),
-            "claim_id": sample_claims[1],
-            "action": "Sent to checker",
-            "reviewer_role": "Claims Officer",
-            "previous_status": "Under Review",
-            "new_status": "Ready for Checker",
-            "note": "Raised for second-level review because of multiple risk indicators.",
-        },
-        {
-            "timestamp": (seed_time + pd.Timedelta(minutes=47)).strftime("%Y-%m-%d %H:%M"),
-            "claim_id": sample_claims[2],
-            "action": "Escalated for follow-up",
-            "reviewer_role": "Senior Reviewer",
-            "previous_status": "Ready for Checker",
-            "new_status": "Escalated",
-            "note": "Further verification recommended before approval.",
-        },
-    ]
+    st.session_state["audit_persistence_warning"] = (
+        "Audit actions are available for this session, but the app could not write "
+        "`outputs/review_audit_log.csv`. This can happen on read-only or temporary "
+        "deployment filesystems."
+    )
+
+
+def _persist_audit_records(records: list[dict[str, str]]) -> None:
+    """Persist audit records when the runtime filesystem allows it."""
+
+    if not save_audit_records(AUDIT_LOG_PATH, records):
+        _set_audit_persistence_warning()
 
 
 def initialize_dashboard_state(claims_df: pd.DataFrame) -> None:
@@ -161,34 +152,25 @@ def initialize_dashboard_state(claims_df: pd.DataFrame) -> None:
     if "claim_notes" not in st.session_state:
         st.session_state["claim_notes"] = {}
 
-    if "claim_status_overrides" not in st.session_state:
-        st.session_state["claim_status_overrides"] = {}
-
     if "audit_log_records" not in st.session_state:
-        st.session_state["audit_log_records"] = _seed_audit_log(claims_df)
+        persisted_records = load_audit_records(AUDIT_LOG_PATH)
+        if persisted_records:
+            st.session_state["audit_log_records"] = persisted_records
+        else:
+            seed_claim_ids = claims_df.head(3)["claim_id"].astype(str).tolist()
+            st.session_state["audit_log_records"] = build_seed_audit_records(seed_claim_ids)
+            _persist_audit_records(st.session_state["audit_log_records"])
+
+    if "claim_status_overrides" not in st.session_state:
+        st.session_state["claim_status_overrides"] = derive_status_overrides(
+            st.session_state.get("audit_log_records", [])
+        )
 
 
 def get_audit_log_df() -> pd.DataFrame:
     """Return the audit log as a dataframe sorted by most recent entries."""
 
-    audit_log_df = pd.DataFrame(st.session_state.get("audit_log_records", []))
-    if audit_log_df.empty:
-        return pd.DataFrame(
-            columns=[
-                "timestamp",
-                "claim_id",
-                "action",
-                "reviewer_role",
-                "previous_status",
-                "new_status",
-                "note",
-            ]
-        )
-
-    audit_log_df["timestamp"] = pd.to_datetime(audit_log_df["timestamp"], errors="coerce")
-    audit_log_df = audit_log_df.sort_values("timestamp", ascending=False).reset_index(drop=True)
-    audit_log_df["timestamp"] = audit_log_df["timestamp"].dt.strftime("%Y-%m-%d %H:%M")
-    return audit_log_df
+    return audit_records_to_frame(st.session_state.get("audit_log_records", []))
 
 
 def append_audit_log_entry(
@@ -199,20 +181,29 @@ def append_audit_log_entry(
     new_status: str,
     note: str,
 ) -> None:
-    """Append a new session-level audit entry."""
+    """Append a new audit entry and persist it where possible."""
 
-    records = st.session_state.setdefault("audit_log_records", [])
-    records.append(
-        {
-            "timestamp": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M"),
-            "claim_id": str(claim_id),
-            "action": action,
-            "reviewer_role": reviewer_role,
-            "previous_status": previous_status,
-            "new_status": new_status,
-            "note": note,
-        }
+    records = append_audit_record(
+        st.session_state.setdefault("audit_log_records", []),
+        claim_id=claim_id,
+        action=action,
+        reviewer_role=reviewer_role,
+        previous_status=previous_status,
+        new_status=new_status,
+        note=note,
     )
+    st.session_state["audit_log_records"] = records
+    _persist_audit_records(records)
+
+
+def reset_demo_audit_log(claims_df: pd.DataFrame) -> None:
+    """Reset the persisted audit log to the synthetic first-run examples."""
+
+    seed_claim_ids = claims_df.head(3)["claim_id"].astype(str).tolist()
+    records = build_seed_audit_records(seed_claim_ids)
+    st.session_state["audit_log_records"] = records
+    st.session_state["claim_status_overrides"] = derive_status_overrides(records)
+    _persist_audit_records(records)
 
 
 def apply_status_overrides(queue_df: pd.DataFrame) -> pd.DataFrame:
@@ -306,45 +297,9 @@ def build_claim_profile_data(
 
 
 def find_related_claims(queue_df: pd.DataFrame, claim_id: str) -> pd.DataFrame:
-    """Find similar or related claims using same member or provider-diagnosis overlap."""
+    """Find related claims using the shared reviewer-context helper."""
 
-    claim_row_df = queue_df.loc[queue_df["claim_id"].astype(str) == str(claim_id)]
-    if claim_row_df.empty:
-        return pd.DataFrame()
-
-    claim_row = claim_row_df.iloc[0]
-    related_df = queue_df.loc[queue_df["claim_id"].astype(str) != str(claim_id)].copy()
-    same_member_mask = related_df["member_id"] == claim_row["member_id"]
-    same_provider_diagnosis_mask = (
-        (related_df["provider_id"] == claim_row["provider_id"])
-        & (related_df["diagnosis_code"] == claim_row["diagnosis_code"])
-    )
-    related_df = related_df.loc[same_member_mask | same_provider_diagnosis_mask].copy()
-    if related_df.empty:
-        return related_df
-
-    related_df["relationship_hint"] = related_df.apply(
-        lambda row: "Same member"
-        if row["member_id"] == claim_row["member_id"]
-        else "Same provider and diagnosis",
-        axis=1,
-    )
-    related_df = related_df.sort_values(
-        ["relationship_hint", "total_risk_score", "claim_date"],
-        ascending=[True, False, False],
-    )
-    return related_df[
-        [
-            "claim_id",
-            "claim_date",
-            "provider_name",
-            "diagnosis_description",
-            "claim_amount",
-            "total_risk_score",
-            "risk_band",
-            "relationship_hint",
-        ]
-    ].head(12)
+    return find_related_claim_context(queue_df, claim_id)
 
 
 def sort_risk_band_frame(frame: pd.DataFrame, band_column: str = "risk_band") -> pd.DataFrame:

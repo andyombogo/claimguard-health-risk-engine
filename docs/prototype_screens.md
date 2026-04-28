@@ -17,6 +17,8 @@ The Streamlit prototype is organized into four reviewer-oriented pages. Together
 
 `outputs/screenshots/claims_review_queue.png`
 
+**Capture note:** Use a filtered view that includes at least one high-risk or critical-risk claim so the triage value is visible immediately.
+
 ## 2. Claim Risk Profile
 
 **Purpose:** Let the reviewer open one claim and understand the reasoning behind its prioritization.
@@ -28,12 +30,15 @@ The Streamlit prototype is organized into four reviewer-oriented pages. Together
 - Recommended action
 - Triggered rule list with explanations
 - Related claims view where available
+- Relationship hints for near-duplicate, same-member, or same-provider diagnosis context
 - Reviewer note area
 - Mock action buttons for reviewed, checker, and escalation steps
 
 **Suggested screenshot placeholder**
 
 `outputs/screenshots/claim_risk_profile.png`
+
+**Capture note:** Select a claim with multiple review flags so the explanation, related claims, and recommended action are all visible.
 
 ## 3. Provider Intelligence
 
@@ -58,6 +63,8 @@ The Streamlit prototype is organized into four reviewer-oriented pages. Together
 - Recent review actions
 - Status changes by claim
 - Reviewer role and note fields
+- Local CSV-backed demo persistence with session fallback
+- Download button for the current audit log
 - Workflow summary for reviewed, checker-ready, and escalated claims
 
 **Suggested screenshot placeholder**
@@ -71,4 +78,5 @@ For presentations, a good sequence is:
 1. Start with the queue to show the triage problem and prioritization view.
 2. Open a single claim profile to show explainability.
 3. Move to provider intelligence to show portfolio-level context.
-4. Close on the audit log to emphasize governance and traceability.
+4. Record a reviewer action from the claim profile.
+5. Close on the audit log to emphasize governance, persistence, and traceability.

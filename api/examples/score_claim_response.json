@@ -1,0 +1,28 @@
+{
+  "claim_id": "CLM-DEMO-9001",
+  "total_risk_score": 50,
+  "risk_band": "High Risk",
+  "recommended_action": "Maker-checker review required",
+  "flags": [
+    {
+      "rule_name": "diagnosis_treatment_mismatch",
+      "severity": "medium",
+      "points": 20,
+      "explanation": "Procedure PRC-DENTAL-EXAM is not in the expected list for diagnosis J18. Expected procedures include: PRC-CHEST-XRAY, PRC-IV-ABX, PRC-RESP-OBS."
+    },
+    {
+      "rule_name": "missing_documents",
+      "severity": "high",
+      "points": 15,
+      "explanation": "Missing required document(s): invoice, discharge summary, lab report."
+    },
+    {
+      "rule_name": "provider_pattern_risk",
+      "severity": "high",
+      "points": 15,
+      "explanation": "Provider-pattern review is recommended because same-provider claim count in the last 30 days is 9 and member claim count in the last 90 days is 6. No detailed historical claim set was supplied with this request, so this flag is based on proxy context."
+    }
+  ],
+  "explanation": "Claim CLM-DEMO-9001 is high risk because it has 3 review flags: diagnosis-treatment mismatch, missing documents, and provider pattern risk. Duplicate and provider-pattern checks are limited because no historical claim list was supplied in the request. Proxy context used previous_claim_count_90d=6 and same_provider_claim_count_30d=9.",
+  "disclaimer": "ClaimGuard scores are review-prioritization signals for human assessment only. They do not confirm fraud, wrongdoing, or final claim disposition."
+}
