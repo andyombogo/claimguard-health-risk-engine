@@ -1,167 +1,128 @@
 # Roadmap
 
-ClaimGuard is being built as an explainable claims-review prototype, not as an automated fraud decision system. The roadmap below reflects the current repository state and the most useful next steps for turning the MVP into a stronger fellowship demo and a credible product concept.
+ClaimGuard is now a live, explainable claims-review MVP. The next roadmap should help the team move from "working prototype" to "credible pilot candidate" without weakening the ethical boundary: the tool supports human review and does not confirm fraud or wrongdoing.
 
-## Current Status
+Live demo: <https://claimguard-health-risk-engine.streamlit.app/>
 
-The repository already includes the core MVP foundation:
+## Current MVP Status
 
-- Synthetic health claims generator and demo CSV output
-- Data dictionary and synthetic data documentation
-- Rule engine for duplicate claims, abnormal billing, diagnosis-treatment mismatch, provider pattern risk, and missing documents
+The repository currently includes:
+
+- Synthetic health claims generator and demo dataset
+- Rule engine for duplicate patterns, abnormal billing, diagnosis-treatment mismatch, provider pattern risk, and missing documents
 - Claim-level risk score, risk band, recommended action, and explanation layer
-- Streamlit dashboard with review queue, claim profile, provider intelligence, and audit log pages
-- Optional FastAPI scoring endpoint for single-claim demonstration
-- Unit tests for major rules, scoring, explainability, and workflow logic
-- Demo outputs and project documentation
-
-The next work should not be about adding random features. It should make the existing prototype more useful to a claims officer: better context, clearer review workflow, stronger validation, and easier demonstration.
+- Streamlit dashboard with review queue, claim profile, provider intelligence, and audit log
+- Related-claim context for same member, same provider, diagnosis, date, and amount checks
+- Local CSV-backed demo audit persistence with session fallback
+- YAML-configurable rule parameters and generated rule-impact summaries
+- Optional FastAPI scoring endpoint with request and response examples
+- Unit tests for rules, scoring, workflow, API, audit log, related claims, and calibration summary
+- Public GitHub repository and live Streamlit deployment
 
 ## Roadmap Flow
 
 ```mermaid
 flowchart LR
-    A[MVP complete<br/>Explainable triage demo]
-    B[Next build<br/>Reviewer workflow and signal quality]
-    C[Phase 2<br/>Historical intelligence and exports]
-    D[Phase 3<br/>Operational readiness concepts]
+    A[Live MVP<br/>Demo-ready prototype]
+    B[Pitch readiness<br/>Tight story and walkthrough]
+    C[Pilot readiness<br/>Feedback, validation, governance]
+    D[Operational maturity<br/>Persistence, access control, monitoring]
 
     A --> B --> C --> D
 ```
 
-## Immediate Next Build
+## Immediate Priority: Pitch Readiness
 
-Focus: strengthen the current MVP without over-engineering it.
+Focus: help reviewers, judges, and partners understand the prototype quickly.
 
-Current implementation progress:
-
-- Persisted demo audit actions: implemented with local CSV persistence and session fallback
-- Related-claim context: implemented with same-member, same-provider, diagnosis, date, and amount checks
-- Rule calibration: implemented with generated rule-impact summaries
-- API examples and endpoint tests: implemented
-- Streamlit deployment readiness: implemented with deployment config and guide
-
-### 1. Persist Reviewer Actions
-
-Why it matters: the dashboard currently demonstrates review actions, but actions are not stored beyond the Streamlit session.
-
-- Add a lightweight local persistence option for audit events, such as SQLite or CSV-backed logs
-- Save reviewer note, action, timestamp, previous status, new status, and reviewer role
-- Show persisted actions on the Audit Log page
-- Keep the implementation local and simple for demo use
+- Keep the live demo link visible in the README and pitch brief
+- Use a consistent three-minute demo path: queue, claim profile, provider intelligence, audit log
+- Highlight the real reviewer problem: volume, fragmented context, repeated checks, and pressure to prioritize
+- Show concrete outputs: risk score, risk band, rule flags, explanations, recommended action, and audit trail
+- Keep responsible-use language clear: "review signal", "triage", "verification", and "human decision"
 
 Acceptance criteria:
 
-- A reviewer can mark a claim as reviewed, send it to checker, or escalate it
-- The action remains visible after refreshing the dashboard
-- No real user or patient data is required
+- A judge can understand the problem and solution in under two minutes
+- The demo can be completed without local setup
+- The app clearly shows why a claim was prioritized
+- The repository explains what is synthetic, what is live, and what is not production-ready
 
-### 2. Improve Related-Claim Context
+## Next Build: Pilot Readiness
 
-Why it matters: duplicate and member-frequency signals are more useful when a reviewer can see the surrounding claims.
+Focus: make the prototype credible for a controlled, governed pilot.
 
-- Add a related claims panel for same member, same provider, same diagnosis, and close claim dates
-- Make near-duplicate matches visible from the Claim Risk Profile page
-- Add clear wording that related claims are review context, not proof of wrongdoing
-- Reuse the existing synthetic dataset rather than introducing external data
+### 1. Reviewer Feedback Loop
 
-Acceptance criteria:
+- Add a reviewer decision field that captures whether a flag was useful, unclear, or not useful
+- Track feedback by rule type so thresholds can be improved
+- Add a small feedback summary page or section in the audit log
 
-- Selecting a flagged claim shows the most relevant nearby claims
-- The panel explains why each related claim is shown
-- Claims outside the matching criteria are not presented as duplicates
+Success measure:
 
-### 3. Calibrate Rule Thresholds
+- The team can show which rules are useful and which create noise.
 
-Why it matters: the MVP has good explainable rules, but thresholds should be easy to tune and defend.
+### 2. Stronger Audit Persistence
 
-- Move duplicate, billing, provider-pattern, and document thresholds fully into `src/config/risk_rules.yaml`
-- Add a small calibration notebook or script that reports how many claims each rule flags
-- Include a before-and-after summary when thresholds change
-- Keep defaults conservative enough for a demo review queue
+- Move from local CSV demo persistence to SQLite for local pilot testing
+- Preserve audit events, reviewer notes, status transitions, and rule configuration version
+- Keep CSV download for demos and handoff
 
-Acceptance criteria:
+Success measure:
 
-- A team member can change thresholds in YAML without editing rule code
-- The repo can generate a rule-impact summary from synthetic data
-- Risk scoring remains reproducible after threshold changes
+- Review actions survive app refreshes and local restarts.
 
-### 4. Add API Examples And Validation Tests
+### 3. Rule Calibration And QA
 
-Why it matters: the API exists, but it needs stronger demo evidence.
+- Expand `rule_impact_summary` to compare threshold changes
+- Add a simple calibration report for flagged claims by rule and risk band
+- Add tests for missing columns, malformed dates, and empty datasets
 
-- Add example request and response JSON for `POST /score-claim`
-- Add unit tests or lightweight integration tests for `/health` and `/score-claim`
-- Document the limitation that single-claim API scoring has reduced duplicate and provider-history context
+Success measure:
 
-Acceptance criteria:
+- The team can explain why thresholds are set where they are.
 
-- A reviewer or demo judge can copy a sample payload and get a valid response
-- API tests run with `pytest`
-- The API response keeps the responsible-use disclaimer
+### 4. More Realistic Synthetic Scenarios
 
-### 5. Polish Demo Screens
+- Add synthetic outpatient, inpatient, pharmacy, lab, and emergency claim mixes
+- Add edge cases for partial approvals, pending claims, and missing admission dates
+- Add synthetic reviewer outcomes for calibration exercises
 
-Why it matters: the Streamlit dashboard is the main story surface for a fellowship or portfolio review.
+Success measure:
 
-- Add screenshots for each dashboard page under `outputs/screenshots/`
-- Update `docs/prototype_screens.md` with actual screenshot links
-- Add a short walkthrough: generate data, run dashboard, open a high-risk claim, view explanation, record a review action
+- The demo feels closer to a real claims queue without using real data.
 
-Acceptance criteria:
+### 5. Deployment And Demo Reliability
 
-- A new visitor can understand the product in under two minutes from the README
-- The screenshots match the current dashboard
-- The walkthrough uses synthetic data only
+- Keep `app/requirements.txt` slim for Streamlit deployment
+- Add a deployment smoke-test checklist after each push
+- Capture final dashboard screenshots for the pitch deck
 
-## Phase 2
+Success measure:
 
-Focus: improve the quality of review signals and the amount of context available to the claims officer.
+- The live app redeploys quickly and consistently.
 
-```mermaid
-flowchart TD
-    A[Better matching]
-    B[Provider and member intelligence]
-    C[Review exports]
-    D[Evaluation and QA]
-    E[Dashboard drill-downs]
+## Phase 2: Workflow And Intelligence
 
-    A --> B
-    B --> C
-    B --> D
-    C --> E
-    D --> E
-```
-
-### Planned Work
+Focus: improve the reviewer experience and pattern intelligence.
 
 - Add RapidFuzz-based near-duplicate matching for provider names, procedure descriptions, and minor coding variations
-- Build richer provider and member profiles using synthetic history, including frequency, average amount, repeated diagnosis patterns, and document-gap rates
-- Add optional anomaly detection experiments as supporting context, not as the main scoring method
-- Generate claim review packs in HTML or PDF-style format for case handoff
-- Add dashboard drill-downs for rule trends, provider summaries, and member history
-- Add more tests for edge cases, missing columns, malformed dates, and API validation
+- Build richer provider and member profiles using synthetic historical context
+- Add rule trend views: flags by rule type, provider type, claim channel, and claim status
+- Generate a claim review pack in HTML or PDF-style format
+- Add batch scoring API endpoint for multiple claims
+- Add role-aware maker-checker states for maker, checker, and escalation owner
 
-### Phase 2 Guardrails
+## Phase 3: Operational Readiness Concepts
 
-- Keep the rule trail visible for every score
-- Do not introduce real patient, provider, or company data
-- Treat anomaly detection as an exploratory signal only
-- Avoid language that confirms fraud or assigns blame
+Focus: outline what would be required before any real-world deployment.
 
-## Phase 3
-
-Focus: describe what operational readiness would require if the prototype moved beyond a hackathon or fellowship demo.
-
-### Planned Work
-
-- Add database-backed claim, provider, review-action, and audit-event tables
-- Expand FastAPI routes for claim lists, provider summaries, scoring batches, and audit records
-- Add authentication and role-aware access patterns for maker, checker, and admin users
-- Formalize maker-checker workflow states, including assignment, review, checker decision, escalation, and closure
-- Add rule versioning so historical scores can be traced back to the rule configuration used at the time
-- Add monitoring views for rule drift, flag volume, reviewer decisions, and false-positive review outcomes
-- Define a validation plan before any real-world deployment, including fairness review, privacy controls, and governance sign-off
+- Database-backed claim, provider, review-action, and audit-event tables
+- Authentication and role-based access control
+- Rule versioning and score reproducibility
+- Monitoring for rule drift, flag volume, reviewer outcomes, and false-positive patterns
+- Privacy, fairness, and clinical/claims validation review
+- Governance process for appeals, overrides, and model/rule updates
 
 ## Not In Scope For The MVP
 

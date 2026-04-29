@@ -1,5 +1,7 @@
 # Demo Summary
 
+Live demo: <https://claimguard-health-risk-engine.streamlit.app/>
+
 ## Current Output
 - Synthetic claims: 572
 - Flagged claims: 280
@@ -20,11 +22,18 @@
 - A high score means a claim should be reviewed more closely, not that wrongdoing is confirmed.
 
 ## Next Steps
-- Persist reviewer actions so audit events survive dashboard refreshes.
-- Show clearer related-claim context for same member, provider, diagnosis, and close claim dates.
-- Move more rule thresholds into YAML and add a rule-impact calibration summary.
-- Add API request/response examples plus endpoint tests for `/health` and `/score-claim`.
-- Capture dashboard screenshots and add a short demo walkthrough for fellowship review.
+- Capture final screenshots from the live Streamlit app for the pitch deck.
+- Add a reviewer feedback loop to mark whether each flag was useful, unclear, or not useful.
+- Move demo audit persistence from CSV to SQLite for a stronger local pilot path.
+- Expand synthetic scenarios across inpatient, outpatient, pharmacy, lab, and emergency claims.
+- Add a calibration report that compares threshold changes before and after tuning.
+
+## Recommended Pitch Flow
+- Start with the landing page to frame the problem and show the live portfolio.
+- Open the review queue and filter to high-risk or critical-risk claims.
+- Open a claim profile and explain the score using the flagged rules.
+- Move to provider intelligence to show portfolio-level screening context.
+- Record a review action and show it in the audit log.
 
 ## Example Commands
 - Generate synthetic data: `py -B src\data_processing\generate_synthetic_claims.py`

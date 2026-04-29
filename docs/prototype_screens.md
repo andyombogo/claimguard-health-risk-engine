@@ -1,6 +1,17 @@
 # Prototype Screens
 
+Live demo: <https://claimguard-health-risk-engine.streamlit.app/>
+
 The Streamlit prototype is organized into four reviewer-oriented pages. Together, they show how ClaimGuard supports triage, investigation, and workflow tracking without removing human control from the review process.
+
+## What The Bench Should See First
+
+The fastest way to understand the prototype is to watch one claim move through the review story:
+
+- The queue shows which claims need attention first.
+- The claim profile explains why the selected claim was prioritized.
+- Provider intelligence gives context without making accusations.
+- The audit log shows the human review action and workflow trace.
 
 ## 1. Claims Review Queue
 

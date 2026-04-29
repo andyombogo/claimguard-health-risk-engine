@@ -17,3 +17,15 @@ ClaimGuard is framed as a response to that operational reality. The prototype is
 The problem this prototype addresses is simple:
 
 How can a medical claims officer get faster, clearer, and more explainable risk prioritization for health claims without losing human control over the decision?
+
+## Why This Prototype Matters Now
+
+The MVP shows that a claims team does not need to begin with a black-box prediction system to improve review quality. A practical first step is an explainable triage layer that:
+
+- brings review signals into one queue
+- shows why a claim was prioritized
+- supports maker-checker escalation
+- keeps an audit trail of reviewer actions
+- leaves the final decision with the claims officer
+
+That makes ClaimGuard suitable as a fellowship prototype, demo solution, and starting point for a carefully governed pilot.

@@ -4,9 +4,21 @@
 
 **Fellowship:** UoN Innovation Fellowship 2025
 
+**Live demo:** <https://claimguard-health-risk-engine.streamlit.app/>
+
 ## Product Pitch
 
 ClaimGuard helps medical claims officers identify and prioritize claims that may require closer human review by surfacing duplicate patterns, abnormal billing, diagnosis-treatment mismatches, missing documents, provider and member patterns, and review recommendations.
+
+## Demo Path For Reviewers
+
+For a quick judging or fellowship review, open the live demo and follow this path:
+
+1. Start on the landing page to see the portfolio summary.
+2. Open **Claims Review Queue** and filter to High Risk or Critical Risk.
+3. Open **Claim Risk Profile** to inspect the score, flags, explanations, and related claims.
+4. Open **Provider Intelligence** to see portfolio-level screening patterns.
+5. Record a review action and open **Audit Log** to show traceability.
 
 ## Why This Matters
 
@@ -22,6 +34,14 @@ Medical claims officers often work under time pressure, high claim volumes, and 
 - Provides a Streamlit dashboard for queue review, claim profiles, provider intelligence, and audit tracking
 - Exposes an optional FastAPI endpoint for demo scoring
 - Includes unit tests, documentation, and demo outputs
+
+## MVP Evidence
+
+- Live Streamlit deployment: <https://claimguard-health-risk-engine.streamlit.app/>
+- Synthetic demo portfolio: 572 claims
+- Review-prioritized claims: 280 flagged claims, 10 high-risk claims, and 2 critical-risk claims
+- Validation: 33 passing pytest tests
+- Deployment optimization: Streamlit uses `app/requirements.txt` for a lighter dashboard build
 
 ## Architecture Snapshot
 
@@ -117,6 +137,7 @@ claimguard-health-risk-engine/
 ## Documentation
 
 - [Problem Statement](./docs/problem_statement.md)
+- [Pitch Brief](./docs/pitch_brief.md)
 - [User Persona](./docs/user_persona.md)
 - [System Architecture](./docs/system_architecture.md)
 - [Risk Scoring Logic](./docs/risk_scoring_logic.md)

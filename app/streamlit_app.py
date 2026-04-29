@@ -19,6 +19,8 @@ from app.dashboard_utils import (
     styled_bar_chart,
 )
 
+LIVE_DEMO_URL = "https://claimguard-health-risk-engine.streamlit.app/"
+
 st.set_page_config(
     page_title="ClaimGuard Health Risk Engine",
     layout="wide",
@@ -42,6 +44,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+st.link_button("Open Live Streamlit Demo", LIVE_DEMO_URL)
+
 metric_one, metric_two, metric_three, metric_four = st.columns(4)
 metric_one.metric("Total Claims", f"{len(queue_df):,}")
 metric_two.metric(
@@ -60,6 +64,12 @@ metric_four.metric(
 left_column, right_column = st.columns((1.1, 0.9))
 
 with left_column:
+    st.subheader("Pitch In One Line")
+    st.write(
+        "ClaimGuard turns large claim queues into an explainable review queue, so claims officers "
+        "can see which claims need attention first and why."
+    )
+
     st.subheader("Problem Statement")
     st.write(
         "Claims officers often manage large volumes of submissions with limited time to "
@@ -73,15 +83,16 @@ with left_column:
         "- Loads synthetic health claims only.\n"
         "- Runs transparent review rules for duplicate patterns, billing, diagnosis-procedure fit, provider signals, and document checks.\n"
         "- Aggregates rule points into a claim-level risk score and risk band.\n"
-        "- Presents the results in review-friendly queue, claim profile, provider intelligence, and audit views."
+        "- Presents the results in review-friendly queue, claim profile, provider intelligence, and audit views.\n"
+        "- Keeps the final decision with the claims officer through maker-checker and escalation guidance."
     )
 
-    st.subheader("Navigation")
+    st.subheader("Three-Minute Demo Path")
     st.markdown(
-        "- Use **Claims Review Queue** to filter and prioritize current work.\n"
-        "- Use **Claim Risk Profile** to inspect one claim in detail.\n"
-        "- Use **Provider Intelligence** to review provider-level screening indicators.\n"
-        "- Use **Audit Log** to view mock workflow actions and maker-checker context."
+        "1. Start in **Claims Review Queue** and filter to High Risk or Critical Risk.\n"
+        "2. Open **Claim Risk Profile** and show the exact review flags behind the score.\n"
+        "3. Move to **Provider Intelligence** to show portfolio-level screening context.\n"
+        "4. Record an action and finish in **Audit Log** to show traceability."
     )
 
 with right_column:
@@ -115,6 +126,41 @@ with right_column:
         """,
         unsafe_allow_html=True,
     )
+
+st.subheader("What Is Working In This MVP")
+mvp_one, mvp_two, mvp_three = st.columns(3)
+with mvp_one:
+    st.markdown(
+        """
+        <span class="claimguard-chip">Explainable rules</span>
+        <span class="claimguard-chip">Risk bands</span>
+        <span class="claimguard-chip">Review actions</span>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.write("Every score can be traced back to named rules, points, severities, and explanations.")
+
+with mvp_two:
+    st.markdown(
+        """
+        <span class="claimguard-chip">Related claims</span>
+        <span class="claimguard-chip">Provider view</span>
+        <span class="claimguard-chip">Document gaps</span>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.write("The reviewer sees claim, member, provider, billing, and document context in one place.")
+
+with mvp_three:
+    st.markdown(
+        """
+        <span class="claimguard-chip">Maker-checker</span>
+        <span class="claimguard-chip">Audit log</span>
+        <span class="claimguard-chip">API demo</span>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.write("The prototype supports a realistic review workflow without making automatic accusations.")
 
 st.subheader("Prototype Snapshot")
 snapshot_df = queue_df[
